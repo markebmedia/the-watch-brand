@@ -923,68 +923,17 @@
       document.getElementById('result-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       try {
-        const prompt = `You are a luxury watch market expert. A user has searched for: "${query}"
-
-Return a JSON object with EXACTLY this structure (no markdown, no explanation, just the JSON):
-{
-  "brand": "Brand name",
-  "model": "Full model name",
-  "reference": "Reference number",
-  "marketPrice": "$XX,XXX",
-  "priceRange": "$XX,XXX – $XX,XXX",
-  "specs": {
-    "caseDiameter": "XXmm",
-    "caseMaterial": "Material",
-    "movement": "Calibre XXXX",
-    "powerReserve": "XX hours",
-    "waterResistance": "XXXm",
-    "yearIntroduced": "XXXX"
-  },
-  "pricing": {
-    "msrp": "$XX,XXX",
-    "secondaryAvg": "$XX,XXX",
-    "premiumDiscount": "+XX% over retail",
-    "trend12m": "+X.X% (6 months)",
-    "liquidity": "High / Medium / Low",
-    "updated": "Feb 2026"
-  },
-  "byCondition": {
-    "mint": "$XX,XXX",
-    "excellent": "$XX,XXX",
-    "veryGood": "$XX,XXX",
-    "good": "$XX,XXX",
-    "fair": "$XX,XXX"
-  },
-  "investment": {
-    "verdict": "Strong Buy | Hold | Caution",
-    "analysis": "2–3 sentence analysis of the watch as an investment, mentioning value retention, demand, and any relevant market context.",
-    "bars": [
-      { "label": "Value Retention", "value": 85 },
-      { "label": "Market Demand", "value": 90 },
-      { "label": "Liquidity", "value": 80 },
-      { "label": "Price Stability", "value": 75 }
-    ]
-  }
-}
-
-Use realistic current (2025–2026) secondary market data. If the watch is not found or the query is too vague, still return a JSON but with "brand": "Not Found" and explain in the analysis field.`;
-
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        const response = await fetch('/.netlify/functions/watch-lookup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-5-20250929',
-            max_tokens: 1000,
-            messages: [{ role: 'user', content: prompt }]
-          })
+          body: JSON.stringify({ query })
         });
 
-        const data = await response.json();
-        const rawText = data.content.map(b => b.text || '').join('');
+        const watch = await response.json();
 
-        // Strip any markdown fences
-        const cleaned = rawText.replace(/```json|```/g, '').trim();
-        const watch = JSON.parse(cleaned);
+        if (!response.ok) {
+          throw new Error(watch.message || 'Lookup failed');
+        }
 
         renderResult(watch);
 
