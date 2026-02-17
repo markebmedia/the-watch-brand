@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>THE WATCH BRAND — Luxury Watch Intelligence</title>
-  <meta name="description" content="Discover the true market value of any luxury timepiece. Specs, secondary market pricing, and investment analysis — powered by AI." />
+  <meta name="description" content="Discover the true market value of any luxury timepiece. Specs, secondary market pricing and investment analysis — powered by AI." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -648,29 +648,149 @@
     .footer-credit a:hover { color: var(--gold); }
 
     /* ── RESPONSIVE ── */
+
+    /* Tablet */
     @media (max-width: 960px) {
       nav { padding: 20px 24px; }
       nav.scrolled { padding: 14px 24px; }
       .nav-links { display: none; }
+      .nav-cta { display: none; }
+
       #hero { padding: 100px 24px 60px; }
+      .hero-title { font-size: clamp(2.8rem, 8vw, 5rem); }
+      .search-container { max-width: 100%; }
+
       #result-area { padding: 0 24px; }
       .result-grid { grid-template-columns: 1fr; }
-      .result-data-section { border-right: none; border-bottom: 1px solid var(--border); }
-      .result-header { grid-template-columns: 1fr; }
+      .result-data-section { border-right: none; border-bottom: 1px solid var(--border); padding: 24px; }
+      .result-header { grid-template-columns: 1fr; gap: 16px; padding: 24px; }
       .result-price-block { text-align: left; }
+      .result-investment { padding: 24px; }
+
       .brands-grid { grid-template-columns: repeat(2, 1fr); }
       .how-grid { grid-template-columns: 1fr; }
-      .how-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .how-item { border-right: none; border-bottom: 1px solid var(--border); padding: 32px 24px; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .stat-item:nth-child(2) { border-right: none; }
       #brands, #how, #stats { padding: 60px 24px; }
       footer { padding: 32px 24px; flex-direction: column; text-align: center; }
       .market-bars { grid-template-columns: 1fr; }
     }
+
+    /* Mobile */
     @media (max-width: 480px) {
-      .brands-grid { grid-template-columns: repeat(2, 1fr); }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
+      nav { padding: 16px 20px; }
+      nav.scrolled { padding: 12px 20px; }
+
+      #hero { padding: 90px 20px 48px; }
+      .hero-rule { height: 40px; margin-bottom: 20px; }
+      .hero-tag { font-size: 0.58rem; margin-bottom: 20px; }
+      .hero-title { font-size: clamp(2.4rem, 11vw, 3.2rem); margin-bottom: 10px; }
+      .hero-subtitle { font-size: 0.9rem; margin-bottom: 40px; }
+
+      .search-label { font-size: 0.58rem; }
+      .search-input { padding: 16px 16px; font-size: 1rem; }
+      .search-btn {
+        padding: 0 16px;
+        min-width: 48px;
+      }
       .search-btn span { display: none; }
+      .search-examples { gap: 8px; }
+      .search-example { font-size: 0.58rem; padding: 5px 10px; }
+
+      #result-area { padding: 0 16px; }
+      .result-header { padding: 20px; }
+      .result-brand { font-size: 0.55rem; }
+      .result-name { font-size: 1.4rem; }
+      .result-price { font-size: 1.6rem; }
+      .result-data-section { padding: 20px; }
+      .data-row { margin-bottom: 10px; }
+      .data-key { font-size: 0.58rem; }
+      .data-val { font-size: 0.85rem; }
+      .section-label { font-size: 0.55rem; }
+      .result-investment { padding: 20px; }
+      .investment-text { font-size: 0.9rem; }
+      .investment-verdict { font-size: 0.55rem; padding: 5px 12px; }
+
+      .brands-grid { grid-template-columns: repeat(2, 1fr); }
+      .brand-cell { padding: 28px 16px; }
+      .brand-name { font-size: 1.1rem; }
+      .brand-count { font-size: 0.55rem; }
+
+      #brands, #how { padding: 48px 20px; }
+      .brands-header, .how-header { margin-bottom: 40px; }
+      .section-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
+      .how-item { padding: 28px 20px; }
+      .how-num { font-size: 3rem; margin-bottom: 14px; }
+      .how-title { font-size: 1.1rem; }
+      .how-text { font-size: 0.75rem; }
+
+      #stats { padding: 40px 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; border: 1px solid var(--border); }
+      .stat-item { padding: 28px 16px; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-top: 1px solid var(--border); }
+      .stat-item:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+      .stat-num { font-size: 1.8rem; }
+      .stat-label { font-size: 0.55rem; }
+
+      footer { padding: 28px 20px; gap: 16px; }
+      .footer-logo { font-size: 0.6rem; }
+      .footer-note { font-size: 0.55rem; }
+      .footer-credit { font-size: 0.55rem; }
+
+      .loading-indicator { padding: 40px 0; }
+      .loading-spinner { width: 32px; height: 32px; }
+    }
+
+    /* Extra small */
+    @media (max-width: 360px) {
+      .hero-title { font-size: 2.2rem; }
+      .search-input { font-size: 0.9rem; }
+      .brands-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ── MOBILE MENU ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--white);
+      transition: all var(--transition);
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8,8,8,0.97);
+      backdrop-filter: blur(20px);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      transition: color var(--transition);
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    @media (max-width: 960px) {
+      .nav-hamburger { display: flex; }
     }
   </style>
 </head>
@@ -685,7 +805,15 @@
       <li><a href="#hero">Lookup</a></li>
     </ul>
     <a href="#hero" class="nav-cta">Start Lookup</a>
+    <button class="nav-hamburger" id="navHamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#brands" onclick="closeMobileMenu()">Brands</a>
+    <a href="#how" onclick="closeMobileMenu()">How It Works</a>
+    <a href="#hero" onclick="closeMobileMenu()">Watch Lookup</a>
+  </div>
 
   <!-- HERO + SEARCH -->
   <section id="hero">
@@ -886,7 +1014,7 @@
   <!-- FOOTER -->
   <footer>
     <div class="footer-logo">The Watch Brand</div>
-    <div class="footer-note">Market data is AI-generated based on publicly available secondary market sources. Figures represent averaged estimates and should not be taken as financial advice. Always verify before transacting.</div>
+    <div class="footer-note">Market data is AI-generated based on publicly available secondary market sources. All prices displayed in GBP (£). Figures represent averaged estimates and should not be taken as financial advice. Always verify before transacting.</div>
     <div class="footer-credit">Built by <a href="https://markebmedia.co.uk" target="_blank" rel="noopener">Markeb Media</a></div>
   </footer>
 
@@ -1117,6 +1245,13 @@
       document.getElementById('res-range').textContent = '—';
       document.getElementById('res-analysis').textContent = 'There was an issue fetching the data. Please check your connection and try again.';
       document.getElementById('resultCard').classList.add('active');
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
     }
   </script>
 
