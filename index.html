@@ -737,6 +737,7 @@
           <div class="result-price-label">Secondary Market Average</div>
           <div class="result-price" id="res-price">—</div>
           <div class="result-price-range" id="res-range">—</div>
+          <div id="live-price-status" style="font-size:0.6rem;letter-spacing:0.1em;margin-top:8px;transition:color 0.4s;"></div>
         </div>
       </div>
 
@@ -919,10 +920,10 @@
       loading.classList.add('active');
       card.classList.remove('active');
 
-      // Scroll to result area
       document.getElementById('result-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       try {
+        // STEP 1: Get instant AI result from Claude
         const response = await fetch('/.netlify/functions/watch-lookup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -935,14 +936,106 @@
           throw new Error(watch.message || 'Lookup failed');
         }
 
+        // Show result immediately
         renderResult(watch);
+        loading.classList.remove('active');
+
+        // STEP 2: Start Apify run in background for live prices
+        startLivePriceFetch(query);
 
       } catch (err) {
         console.error(err);
         renderError();
-      } finally {
         loading.classList.remove('active');
       }
+    }
+
+    // ── LIVE PRICE FETCH (async background) ──
+    async function startLivePriceFetch(query) {
+      try {
+        // Show "fetching live prices" indicator
+        showLivePriceStatus('fetching');
+
+        const startResponse = await fetch('/.netlify/functions/watch-prices', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+
+        if (!startResponse.ok) return;
+
+        const { runId, datasetId } = await startResponse.json();
+        if (!runId || !datasetId) return;
+
+        // Poll every 5 seconds until done
+        let attempts = 0;
+        const maxAttempts = 15;
+
+        const pollInterval = setInterval(async () => {
+          attempts++;
+          if (attempts > maxAttempts) {
+            clearInterval(pollInterval);
+            showLivePriceStatus('timeout');
+            return;
+          }
+
+          try {
+            const pollResponse = await fetch(
+              `/.netlify/functions/watch-poll?runId=${runId}&datasetId=${datasetId}`
+            );
+            const result = await pollResponse.json();
+
+            if (result.status === 'RUNNING') return; // keep polling
+
+            clearInterval(pollInterval);
+
+            if (result.status === 'SUCCEEDED' && result.prices) {
+              updateLivePrices(result.prices, result.listings, result.sample);
+            } else {
+              showLivePriceStatus('unavailable');
+            }
+          } catch (e) {
+            clearInterval(pollInterval);
+            showLivePriceStatus('unavailable');
+          }
+        }, 5000);
+
+      } catch (err) {
+        console.error('[live prices]', err);
+        showLivePriceStatus('unavailable');
+      }
+    }
+
+    function showLivePriceStatus(state) {
+      const el = document.getElementById('live-price-status');
+      if (!el) return;
+      const messages = {
+        fetching: '⟳ Fetching live Chrono24 prices...',
+        timeout:  '— Live prices timed out',
+        unavailable: '— Live prices unavailable'
+      };
+      el.textContent = messages[state] || '';
+      el.style.color = state === 'fetching' ? 'var(--gold-dim)' : 'var(--white-dim)';
+    }
+
+    function updateLivePrices(prices, count, sample) {
+      // Update main price display
+      if (prices.average) {
+        document.getElementById('res-price').textContent = prices.average;
+        document.getElementById('res-range').textContent = `Range: ${prices.min} – ${prices.max}`;
+        document.getElementById('res-secondary').textContent = prices.average;
+      }
+
+      // Update status
+      const el = document.getElementById('live-price-status');
+      if (el) {
+        el.textContent = `✓ Live prices updated — ${count} Chrono24 listings`;
+        el.style.color = 'var(--gold)';
+      }
+
+      // Update listings count
+      const lc = document.getElementById('res-listings-count');
+      if (lc) lc.textContent = count;
     }
 
     function renderResult(w) {
