@@ -51,7 +51,7 @@ exports.handler = async (event) => {
 
   try {
     const encoded = encodeURIComponent(query);
-    const chrono24Url = `https://www.chrono24.com/search/index.htm?dosearch=true&query=${encoded}&maxAgeInDays=0`;
+    const chrono24Url = `https://www.chrono24.com/search/index.htm?dosearch=true&query=${encoded}&maxAgeInDays=0&currencyId=GBP`;
     const ACTOR_ID = 'misterkhan~chrono24-search-scraper';
 
     console.log(`[watch-prices] Starting Apify run for: ${query}`);

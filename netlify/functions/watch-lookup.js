@@ -54,15 +54,17 @@ exports.handler = async (event) => {
   }
 
   try {
-    const prompt = `You are a luxury watch market expert. A user has searched for: "${query}"
+    const prompt = `You are a luxury watch market expert based in the UK. A user has searched for: "${query}"
+
+CRITICAL: You MUST express every single price in British Pounds (£ GBP). Never use $ USD. Convert all prices to GBP. Example: £12,500 not $15,000.
 
 Return a JSON object with EXACTLY this structure (no markdown, no explanation, just raw JSON):
 {
   "brand": "Brand name",
   "model": "Full model name",
   "reference": "Reference number",
-  "marketPrice": "$XX,XXX",
-  "priceRange": "$XX,XXX - $XX,XXX",
+  "marketPrice": "£XX,XXX",
+  "priceRange": "£XX,XXX - £XX,XXX",
   "specs": {
     "caseDiameter": "XXmm",
     "caseMaterial": "Material",
@@ -72,8 +74,8 @@ Return a JSON object with EXACTLY this structure (no markdown, no explanation, j
     "yearIntroduced": "XXXX"
   },
   "pricing": {
-    "msrp": "$XX,XXX",
-    "secondaryAvg": "$XX,XXX",
+    "msrp": "£XX,XXX",
+    "secondaryAvg": "£XX,XXX",
     "premiumDiscount": "+XX% over retail",
     "trend12m": "+X.X%",
     "liquidity": "High",
@@ -81,11 +83,11 @@ Return a JSON object with EXACTLY this structure (no markdown, no explanation, j
     "listingsFound": "0"
   },
   "byCondition": {
-    "mint": "$XX,XXX",
-    "excellent": "$XX,XXX",
-    "veryGood": "$XX,XXX",
-    "good": "$XX,XXX",
-    "fair": "$XX,XXX"
+    "mint": "£XX,XXX",
+    "excellent": "£XX,XXX",
+    "veryGood": "£XX,XXX",
+    "good": "£XX,XXX",
+    "fair": "£XX,XXX"
   },
   "investment": {
     "verdict": "Strong Buy",
@@ -99,7 +101,7 @@ Return a JSON object with EXACTLY this structure (no markdown, no explanation, j
   }
 }
 
-Use realistic 2025-2026 secondary market data. If not found, set brand to "Not Found" and explain in analysis.`;
+Use realistic 2025-2026 secondary market data. Express ALL prices in GBP (£). Use UK English spelling throughout. If not found, set brand to "Not Found" and explain in the analysis field.`;
 
     const claudeResponse = await httpsPost(
       'https://api.anthropic.com/v1/messages',

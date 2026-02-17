@@ -39,7 +39,10 @@ function calcStats(listings) {
   const trim = Math.floor(prices.length * 0.1);
   const trimmed = prices.slice(trim, prices.length - (trim || undefined));
   const avg = Math.round(trimmed.reduce((a, b) => a + b, 0) / trimmed.length);
-  const fmt = n => '$' + n.toLocaleString('en-US');
+
+  // Convert USD to GBP (approximate rate 0.79)
+  const toGBP = n => Math.round(n * 0.79);
+  const fmt = n => '£' + toGBP(n).toLocaleString('en-GB');
 
   return {
     average: fmt(avg),
